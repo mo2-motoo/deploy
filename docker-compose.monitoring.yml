@@ -34,7 +34,17 @@ services:
       - kafka
     networks:
       - backend
+      - management
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.kafka-ui.rule=Host(`kafka.mydomain.com`)"
+      - "traefik.http.routers.kafka-ui.entrypoints=websecure"
+      - "traefik.http.routers.kafka-ui.tls=true"
+      - "traefik.http.services.kafka-ui.loadbalancer.server.port=8080"
+      - "traefik.http.routers.kafka-ui.middlewares=security-headers@file,cors@file"
 
 networks:
   backend:
+    external: true
+  management:
     external: true
